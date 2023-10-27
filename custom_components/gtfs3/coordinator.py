@@ -25,18 +25,16 @@ _LOGGER = logging.getLogger(__name__)
 
 class GTFSUpdateCoordinator(DataUpdateCoordinator):
     """Data update coordinator for the Pronote integration."""
-    _LOGGER.debug(f"coordinator: GTFSDataUpdate")
     config_entry: ConfigEntry
 
     def __init__(
         self, hass: HomeAssistant, entry: ConfigEntry
     ) -> None:
         """Initialize the coordinator."""
-        _LOGGER.debug(f"coordinator: GTFSDataUpdate INIT")
         super().__init__(
             hass=hass,
             logger=_LOGGER,
-            name=entry.title,
+            name=entry.entry_id,
             update_interval=timedelta(minutes=entry.data.get("refresh_interval", DEFAULT_REFRESH_INTERVAL)),
         )
         self.config_entry = entry
@@ -61,7 +59,5 @@ class GTFSUpdateCoordinator(DataUpdateCoordinator):
         except Exception as ex:
             _LOGGER.info(
                 "Error getting gtfs data from generic helper: %s", ex)            
-
-        _LOGGER.debug(f"self.data: {self._data}")
         
         return self._data

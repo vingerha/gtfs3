@@ -35,8 +35,7 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Pronote from a config entry."""
-    _LOGGER.debug(f"_init: async_setup")
-                   
+                  
     hass.data.setdefault(DOMAIN, {})
 
     coordinator = GTFSUpdateCoordinator(hass, entry)
@@ -54,7 +53,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    _LOGGER.debug(f"_init: async_unload")
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
 

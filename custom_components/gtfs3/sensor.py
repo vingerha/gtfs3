@@ -52,26 +52,8 @@ class GTFSDepartureSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator) -> None:
         """Initialize the GTFSsensor."""
         super().__init__(coordinator)
-        self._pygtfs = coordinator.data['schedule']
-        self.origin = coordinator.data['origin']
-        self.destination = coordinator.data['destination']
-        self._include_tomorrow = coordinator.data['include_tomorrow']
-        self._offset = coordinator.data['offset']
-        self._name = coordinator.data['name']
-        self._departure = coordinator.data['next_departure']
-        self._available = False
-        self._icon = ICON
-        self._state: datetime.datetime | None = None
-        self._attributes: dict[str, Any] = {}
-        self._attr_device_class = SensorDeviceClass.TIMESTAMP
 
-        self._agency = None
-        self._route = None
-        self._trip = None
-        self._origin = None
-        self._destination = None
-        self._attr_native_value = "nope"
-        self._state = None
+        self._name = coordinator.data['name']
 
         self._attr_unique_id = f"gtfs-{self._name}"
         self._attr_device_info = DeviceInfo(
@@ -81,7 +63,7 @@ class GTFSDepartureSensor(CoordinatorEntity, SensorEntity):
                 (DOMAIN, f"GTFS - {self._name}")
             },
             manufacturer="GTFS",
-            model="model_TBD",
+            model=self._name,
         ) 
         self._update_attrs()        
 
@@ -103,6 +85,22 @@ class GTFSDepartureSensor(CoordinatorEntity, SensorEntity):
     
 #    @property
     def _update_attrs(self):
+        self._pygtfs = self.coordinator.data['schedule']
+        self.origin = self.coordinator.data['origin']
+        self.destination = self.coordinator.data['destination']
+        self._include_tomorrow = self.coordinator.data['include_tomorrow']
+        self._offset = self.coordinator.data['offset']
+        self._departure = self.coordinator.data['next_departure']
+        self._available = False
+        self._icon = ICON
+        self._state: datetime.datetime | None = None
+        self._attributes: dict[str, Any] = {}
+        self._attr_device_class = SensorDeviceClass.TIMESTAMP
+        self._origin = None
+        self._destination = None
+        self._trip = None
+        self._route = None
+        self._agency = None
         # Fetch valid stop information once
         if not self._origin:
             stops = self._pygtfs.stops_by_id(self.origin)
