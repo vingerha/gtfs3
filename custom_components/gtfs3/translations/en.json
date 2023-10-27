@@ -1,0 +1,25 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "Name of the route",
+					"origin": "Origin Stop ID",
+					"destination": "Destination Stop ID",
+					"offset": "Offset in hours",	
+					"refresh_interval": "Refresh interval in minutes",					
+					"file": "Datafile",
+					"include_tomorrow": "Include tomorrow"
+                }
+            }
+        }
+    }
+}

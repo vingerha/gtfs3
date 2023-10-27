@@ -1,0 +1,12 @@
+{
+  "domain": "gtfs3",
+  "name": "General Transit Feed Specification (GTFS) Third",
+  "documentation": "https://github.com/vingerha/gtfs2",
+  "integration_type": "service",
+  "requirements": ["pygtfs==0.1.7"],
+  "version": "1.0.0",
+  "codeowners": [],
+  "iot_class": "local_polling",
+  "config_flow": true,
+  "loggers": ["pygtfs"]
+}
