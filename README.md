@@ -6,8 +6,8 @@ Copy from HA GTFS, aiming to improve the integration
 <h4> Note: uses folder /config/gtfs3 to store the data (zip and sqlite)</h4>
 
 ## Updates
-- 20231025: adds attributes 'next_departures' with max (!) 10 values of the remaining departure times for that day (and first of tomorrow if configured)
-
+- 20231027: reworked gtfs into more modern setup and without configuration.yaml
+  
 ## Installation via HACS :
 
 In  HACS, select the 3-dots and then custom repositories
