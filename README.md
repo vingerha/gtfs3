@@ -1,6 +1,6 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
-# GTFS2
+# GTFS3
 Copy from HA GTFS, aiming to improve the integration
 
 <h4> Note: uses folder /config/gtfs3 to store the data (zip and sqlite)</h4>
