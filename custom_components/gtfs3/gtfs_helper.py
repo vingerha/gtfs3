@@ -254,7 +254,7 @@ def get_next_departure(data) -> dict:
     offset = data['offset']
     include_tomorrow = data['include_tomorrow']
     """Get the next departure for the given schedule."""
-    now = dt_util.now().replace(tzinfo=None) + datetime.timedelta(hours=offset)
+    now = dt_util.now().replace(tzinfo=None) + datetime.timedelta(minutes=offset)
     #now = dt_util.now().replace(tzinfo=None)
     now_date = now.strftime(dt_util.DATE_STR_FORMAT)
     yesterday = now - datetime.timedelta(days=1)

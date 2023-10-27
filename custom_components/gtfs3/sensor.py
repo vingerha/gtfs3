@@ -9,7 +9,7 @@ from homeassistant.core import callback
 
 from datetime import date, timedelta, datetime
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
@@ -38,10 +38,7 @@ async def async_setup_entry(
     coordinator: GTFSUpdateCoordinator = hass.data[DOMAIN][
         config_entry.entry_id
     ]["coordinator"]
-    _LOGGER.debug(f"Sensor Async Setup coordinator entry: {hass.data[DOMAIN][config_entry.entry_id]}")
-    #coordinator = GTFSUpdateCoordinator(hass.data[DOMAIN][config_entry.entry_id])
 
-    _LOGGER.debug(f"Sensor Async Setup - offset: {CONF_OFFSET}")
     await coordinator.async_config_entry_first_refresh()
 
     sensors = [
@@ -50,11 +47,9 @@ async def async_setup_entry(
 
     async_add_entities(sensors, False)   
 
-class GTFSDepartureSensor(CoordinatorEntity):
+class GTFSDepartureSensor(CoordinatorEntity, SensorEntity):
     """Implementation of a GTFS departure sensor."""
-    _LOGGER.info("GTFS Departure Sensor")
     def __init__(self, coordinator) -> None:
-        _LOGGER.info("GTFS Departure Sensor init")
         """Initialize the GTFSsensor."""
         super().__init__(coordinator)
         self._pygtfs = coordinator.data['schedule']
@@ -68,13 +63,14 @@ class GTFSDepartureSensor(CoordinatorEntity):
         self._icon = ICON
         self._state: datetime.datetime | None = None
         self._attributes: dict[str, Any] = {}
+        self._attr_device_class = SensorDeviceClass.TIMESTAMP
 
         self._agency = None
         self._route = None
         self._trip = None
         self._origin = None
         self._destination = None
-        self._attr_native_value = None
+        self._attr_native_value = "nope"
         self._state = None
 
         self._attr_unique_id = f"gtfs-{self._name}"
@@ -86,7 +82,8 @@ class GTFSDepartureSensor(CoordinatorEntity):
             },
             manufacturer="GTFS",
             model="model_TBD",
-        )     
+        ) 
+        self._update_attrs()        
 
     @property
     def name(self) -> str:
@@ -96,27 +93,16 @@ class GTFSDepartureSensor(CoordinatorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_is_on = self.coordinator.data['next_departure']
-        self.async_write_ha_state()      
+        self._update_attrs()
+        super()._handle_coordinator_update()    
         
     @property
     def icon(self) -> str:
         """Icon to use in the frontend, if any."""
         return self._icon    
     
-    @property
-    def native_value(self):
-        """Return the state of the sensor."""
-        return self.coordinator.data['next_departure']['departure_time']
-        
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""                                   
-        return self.coordinator.last_update_success   
-
-    @property
-    def extra_state_attributes(self):
-        _LOGGER.debug("GTFS Departure Sensor extra state attribs")
+#    @property
+    def _update_attrs(self):
         # Fetch valid stop information once
         if not self._origin:
             stops = self._pygtfs.stops_by_id(self.origin)
@@ -186,7 +172,7 @@ class GTFSDepartureSensor(CoordinatorEntity):
             self._state = self._departure["departure_time"].replace(
                 tzinfo=dt_util.UTC
             )
-        
+        # settin state value
         self._attr_native_value = self._state
 
         if self._agency:
@@ -346,9 +332,9 @@ class GTFSDepartureSensor(CoordinatorEntity):
             self._attributes["next_departures"] = self._departure["next_departures"][:10]   
             
         self._attributes["updated_at"] = dt_util.now().replace(tzinfo=None)
-
-        _LOGGER.debug(f"Self attributes for sensor: {self._attributes}") 
-        return self._attributes            
+        self._attr_extra_state_attributes = self._attributes
+        _LOGGER.debug(f"Extra State Attributes: {self._attr_extra_state_attributes}") 
+        return self._attr_extra_state_attributes            
 
     @staticmethod
     def dict_for_table(resource: Any) -> dict:

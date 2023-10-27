@@ -6,7 +6,7 @@
 		  "name": "Name of the route",
           "origin": "Origin Stop ID",
           "destination": "Destination Stop ID",
-		  "offset": "Offset in hours",
+		  "offset": "Offset in minutes",
 		  "refresh_interval": "Refresh interval in minutes",
 		  "file": "Datafile",
 		  "include_tomorrow": "Include tomorrow"		  
