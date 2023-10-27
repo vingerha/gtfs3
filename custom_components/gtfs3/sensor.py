@@ -86,7 +86,8 @@ class GTFSDepartureSensor(CoordinatorEntity):
             },
             manufacturer="GTFS",
             model="model_TBD",
-        )     
+        ) 
+        self._update_attrs()        
 
     @property
     def name(self) -> str:
@@ -96,26 +97,16 @@ class GTFSDepartureSensor(CoordinatorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_is_on = self.coordinator.data['next_departure']
-        self.async_write_ha_state()      
+        self._update_attrs()
+        super()._handle_coordinator_update()    
         
     @property
     def icon(self) -> str:
         """Icon to use in the frontend, if any."""
         return self._icon    
     
-    @property
-    def native_value(self):
-        """Return the state of the sensor."""
-        return self.coordinator.data['next_departure']['departure_time']
-        
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""                                   
-        return self.coordinator.last_update_success   
-
-    @property
-    def extra_state_attributes(self):
+#    @property
+    def _update_attrs(self):
         _LOGGER.debug("GTFS Departure Sensor extra state attribs")
         # Fetch valid stop information once
         if not self._origin:
@@ -346,9 +337,10 @@ class GTFSDepartureSensor(CoordinatorEntity):
             self._attributes["next_departures"] = self._departure["next_departures"][:10]   
             
         self._attributes["updated_at"] = dt_util.now().replace(tzinfo=None)
-
+        self._attr_extra_state_attributes = self._attributes
         _LOGGER.debug(f"Self attributes for sensor: {self._attributes}") 
-        return self._attributes            
+        _LOGGER.debug(f"Self extra state attributes for sensor: {self._attr_extra_state_attributes}") 
+        return self._attr_extra_state_attributes            
 
     @staticmethod
     def dict_for_table(resource: Any) -> dict:

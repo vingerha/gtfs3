@@ -45,7 +45,7 @@ class GTFSUpdateCoordinator(DataUpdateCoordinator):
         """Get the latest data from GTFS and updates the state."""
         data = self.config_entry.data
         self._pygtfs = get_gtfs(self.hass, DEFAULT_PATH, data['file'])
-        self.data = {
+        self._data = {
             "schedule": self._pygtfs,
             "origin": data['origin'],
             "destination": data['destination'],
@@ -57,11 +57,11 @@ class GTFSUpdateCoordinator(DataUpdateCoordinator):
         }
         
         try:
-            self.data['next_departure'] = await self.hass.async_add_executor_job(get_next_departure, self.data)
+            self._data['next_departure'] = await self.hass.async_add_executor_job(get_next_departure, self._data)
         except Exception as ex:
             _LOGGER.info(
                 "Error getting gtfs data from generic helper: %s", ex)            
 
-        _LOGGER.debug(f"self.data: {self.data}")
+        _LOGGER.debug(f"self.data: {self._data}")
         
-        return self.data
+        return self._data
