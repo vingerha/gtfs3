@@ -6,8 +6,8 @@ Copy from HA GTFS, aiming to improve the integration
 <h4> Note: uses folder /config/gtfs3 to store the data (zip and sqlite)</h4>
 
 ## Updates
-- 20231025: adds attributes 'next_departures' with max (!) 10 values of the remaining departure times for that day (and first of tomorrow if configured)
-
+- 20231027: reworked gtfs into more modern setup and without configuration.yaml
+  
 ## Installation via HACS :
 
 In  HACS, select the 3-dots and then custom repositories
@@ -16,14 +16,10 @@ Add :
 - Category : Integration
 
 ## Configuration
-Example configuration :
-```
-  - platform: gtfs2
-    origin: "STOPPOINT:00812"
-    destination: "STOPPOINT:01549"
-    name: "Bus 530 outbound"
-    data: zou.zip
-    include_tomorrow: true
+Use the workflow in Settings > Integrations
+
+![image](https://github.com/vingerha/gtfs3/assets/44190435/6fc6ad8e-229c-4471-84e1-609258a35f96)
+
 ```
 ## How to find origin/destination
 Note that the format of these can be different for each (!) source.
