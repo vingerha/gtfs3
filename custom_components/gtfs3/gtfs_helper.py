@@ -474,7 +474,7 @@ def get_gtfs(hass, path, data) -> None:
 
     if not os.path.exists(os.path.join(gtfs_dir, data)):
         _LOGGER.error("The given GTFS data file/folder was not found")
-        return
+        return "no_data_file"
 
     (gtfs_root, _) = os.path.splitext(data)
 

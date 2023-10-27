@@ -10,7 +10,7 @@ import voluptuous as vol
 from datetime import time
 
 from homeassistant import config_entries
-from homeassistant.data_entry_flow import FlowResult
+from homeassistant.data_entry_flow import AbortFlow, FlowResult
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.core import callback
 from homeassistant.const import CONF_NAME, CONF_OFFSET, STATE_UNKNOWN
@@ -24,6 +24,7 @@ from .gtfs_helper import *
 from .const import (
     DOMAIN,
     DEFAULT_REFRESH_INTERVAL,
+    DEFAULT_PATH,
 )
 
 
@@ -49,18 +50,22 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(self, user_input: dict | None = None) -> FlowResult:
         """Handle a flow initialized by the user."""
+        errors: dict[str, str] = {}
         _LOGGER.debug("Setup process initiated by user with offset: {CONF_OFFSET} ")
-        if user_input is None:
-            _LOGGER.info("Selecting route")
+        if user_input is not None:
+            check_data = get_gtfs(self.hass, DEFAULT_PATH, user_input['file'])
+            if check_data == "no_data_file":
+                errors["base"] = "no_data_file"
+            else:    
+                return self.async_create_entry(title=user_input['name'], data=user_input)
 
-            return self.async_show_form(
-                step_id="user", data_schema=STEP_USER_ROUTE
-            )
-        return self.async_create_entry(title=user_input['name'], data=user_input)
+        return self.async_show_form(
+            step_id="user", data_schema=STEP_USER_ROUTE, errors=errors
+        )
+        
+        
 
-class CannotConnect(HomeAssistantError):
-    """Error to indicate we cannot connect."""
+        
+            
+        
 
-
-class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""
