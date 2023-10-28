@@ -4,8 +4,8 @@
 			  "cannot_connect": "Cannot connect",
 			  "invalid_auth": "Invalid authentication",
 			  "unknown": "Unknown error",
-			  "destination_stop_time": "E: End point incorrect",
-			  "origin_stop_time": "E: Start point incorrect",
+			  "stop_incorrect": "Start and/or End destination probably incorrect, check logs",
+			  "generic_failure": "Overall failure, check logs",
 			  "no_data_file": "Data file: name incorrect / does not exist / not in the correct folder"
 			},
 		"abort": {

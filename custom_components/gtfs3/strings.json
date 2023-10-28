@@ -17,8 +17,8 @@
       "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
       "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
       "unknown": "[%key:common::config_flow::error::unknown%]",
-	  "destination_stop_time": "[%key:common::config_flow::error::destination_stop_time%]",
-	  "origin_stop_time": "[%key:common::config_flow::error::origin_stop_time%]",
+	  "stop_incorrect": "Start and/or End destination probably incorrect, check logs",
+	  "generic_failure": "Overall failure, check logs",
 	  "no_data_file": "Data file: name incorrect / does not exist / not in the correct folder"
     },
     "abort": {
